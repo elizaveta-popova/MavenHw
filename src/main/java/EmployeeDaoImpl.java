@@ -11,11 +11,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
     public void add(Employee employee) {
         try(PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO employee (first_name, last_name, gender, age, city_id) VALUES ((?), (?), (?), (?), (?))")) {
-            statement.setString(1, employee.getFirst_name());
-            statement.setString(2, employee.getLast_name());
+            statement.setString(1, employee.getFirstName());
+            statement.setString(2, employee.getLastName());
             statement.setString(3, employee.getGender());
             statement.setInt(4, employee.getAge());
-            statement.setInt(5, employee.getCity().getCity_id());
+            statement.setInt(5, employee.getCity().getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -29,10 +29,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 "SELECT * FROM employee INNER JOIN city ON employee.city_id=city.city_id WHERE id=(?)")) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()) {
+            if(resultSet.next()) {
                 employee.setId(resultSet.getInt(1));
-                employee.setFirst_name(resultSet.getString("first_name"));
-                employee.setLast_name(resultSet.getString("last_name"));
+                employee.setFirstName(resultSet.getString("first_name"));
+                employee.setLastName(resultSet.getString("last_name"));
                 employee.setGender(resultSet.getString("gender"));
                 employee.setAge(resultSet.getInt("5"));
                 employee.setCity(new City ((resultSet.getInt("city_id")), resultSet.getString ("city_name")));
@@ -40,7 +40,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return employee;
+        return null;
     }
 
     @Override
@@ -70,15 +70,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
 
     @Override
-    public void updateEmployee(int id, Employee employee) {
+    public void updateEmployee(Employee employee) {
         try(PreparedStatement statement = connection.prepareStatement(
         "UPDATE employee SET first_name=(?), last_name=(?), gender=(?)," +
         "age=(?), city_id=(?) WHERE id=(?)")) {
-            statement.setString(1, employee.getFirst_name());
-            statement.setString(2, employee.getLast_name());
+            statement.setString(1, employee.getFirstName());
+            statement.setString(2, employee.getLastName());
             statement.setString(3, employee.getGender());
             statement.setInt(4, employee.getAge());
-            statement.setInt(5, employee.getCity().getCity_id());
+            statement.setInt(5, employee.getCity().getId());
+            int id = 0;
             statement.setInt(6, id);
             statement.executeUpdate();
         } catch (SQLException e) {

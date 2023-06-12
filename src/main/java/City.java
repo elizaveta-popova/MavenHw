@@ -7,6 +7,6 @@ import lombok.*;
 @ToString
 
 public class City {
-    private int city_id;
-    private String city_name;
+    private int id;
+    private String cityName;
 }
